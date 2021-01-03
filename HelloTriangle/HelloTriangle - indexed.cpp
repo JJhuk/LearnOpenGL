@@ -1,6 +1,6 @@
+#include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 const char* vertex_shader_source = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
