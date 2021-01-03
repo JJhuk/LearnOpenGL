@@ -30,7 +30,7 @@ GLuint shader::compile_shader(const char* source, const GLuint shader_type)
 	glShaderSource(shader, 1, &source, nullptr);
 	glCompileShader(shader);
 
-	if(!is_success_compile_shader(shader))
+	if (!is_success_compile_shader(shader))
 	{
 		print_shader_error(shader);
 		return -1;
