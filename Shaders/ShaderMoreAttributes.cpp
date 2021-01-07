@@ -1,4 +1,4 @@
-ï»¿#include <iostream>
+#include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Common/def.h"
@@ -18,35 +18,37 @@ struct vec4_f
 };
 
 float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // ì™¼ìª½ ì‚¼ê°í˜• ì™¼ìª½
-		0.0f, 0.5f, 0.0f, // ì™¼ìª½ ì‚¼ê°í˜• ìœ„
-		0.5f, -0.5f, 0.0f // ì™¼ìª½ ì‚¼ê°í˜• ì˜¤ë¥¸ìª½
+	//À§Ä¡					// »ö»ó
+	 0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f, // ¿À¸¥ÂÊ ÇÏ´Ü
+	-0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f, // ¿ŞÂÊ ÇÏ´Ü
+	 0.0f,  0.5f, 0.0f,		0.0f, 0.0f, 1.0f  // »ó´Ü
 };
 
 const char* vertex_shader_source = R"(
 	#version 330 core
 
 	layout (location = 0) in vec3 aPos;
+	layout (location = 1) in vec3 aColor;
 
-	out vec4 vertexColor;
+	out vec3 ourColor;
 
 	void main()
 	{
 		gl_Position = vec4(aPos, 1.0);
-		vertexColor = vec4(0.5, 0.0, 0.0, 1.0);
+		ourColor = aColor;
 	}
 )";
 
-const char* fragment_shader_source =R"(
+const char* fragment_shader_source = R"(
 	#version 330 core
 
 	out vec4 FragColor;
 
-	in vec4 vertexColor;
+	in vec3 ourColor;
 
 	void main()
 	{
-		FragColor = vertexColor;
+		FragColor = vec4(ourColor, 1.0);
 	}
 )";
 
@@ -102,13 +104,18 @@ int main()
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
-	
+
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof vertices, vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr);
+	//À§Ä¡ Attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(0)); //´ÙÀ½ À§Ä¡ µ¥ÀÌÅÍ±îÁö stride°¡ 6 * 4 = 24
 	glEnableVertexAttribArray(0);
+
+	//»ö»ó Attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(3 * sizeof(float))); //»ö»óÀÇ offsetÀº À§Ä¡ µ¥ÀÌÅÍ ´ÙÀ½ÀÌ¹Ç·Î 3Ä­µÚ
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);
 	glBindVertexArray(NULL);
@@ -121,6 +128,9 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(program);
+
+		glUseProgram(program);
+
 		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
