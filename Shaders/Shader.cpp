@@ -4,8 +4,6 @@
 
 void Shader::read_shader_code(const char* vertex_path, const char* fragment_path)
 {
-	std::string vertex_code;
-	std::string fragment_code;
 	std::ifstream vertex_shader_file;
 	std::ifstream fragment_shader_file;
 
@@ -24,16 +22,14 @@ void Shader::read_shader_code(const char* vertex_path, const char* fragment_path
 		vertex_shader_file.close();
 		fragment_shader_file.close();
 
-		vertex_code = vertex_shader_stream.str();
-		fragment_code = fragment_shader_stream.str();
+		vertex_shader_code_ = vertex_shader_stream.str();
+		fragment_shader_code_ = fragment_shader_stream.str();
 	}
 	catch (std::ifstream::failure e)
 	{
 		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
 	}
-
-	vertex_shader_code_ = vertex_code.c_str();
-	fragment_shader_code_ = fragment_code.c_str();
+	
 }
 
 bool Shader::is_success_compile_shader(const GLuint shader_id)
@@ -47,7 +43,8 @@ void Shader::print_shader_error(const GLuint shader_id)
 {
 	char info_log[512];
 
-	if (is_success_compile_shader(shader_id)) return;
+	if (is_success_compile_shader(shader_id))
+		return;
 
 	glGetShaderInfoLog(shader_id, 512, nullptr, info_log);
 	std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << info_log << std::endl;
@@ -75,14 +72,13 @@ GLuint Shader::compile_shader(const char* source, const GLuint shader_type)
 }
 
 
-Shader::Shader(const char* vertex_path, const char* fragment_path) : program_id(0), vertex_shader_code_(nullptr),
-                                                                     fragment_shader_code_(nullptr)
+Shader::Shader(const char* vertex_path, const char* fragment_path) : program_id(0)
 {
 	read_shader_code(vertex_path, fragment_path);
 
 	program_id = glCreateProgram();
-	const auto vertex_shader = compile_shader(this->vertex_shader_code_, GL_VERTEX_SHADER);
-	const auto fragment_shader = compile_shader(this->fragment_shader_code_, GL_FRAGMENT_SHADER);
+	const auto vertex_shader = compile_shader(this->vertex_shader_code_.c_str(), GL_VERTEX_SHADER);
+	const auto fragment_shader = compile_shader(this->fragment_shader_code_.c_str(), GL_FRAGMENT_SHADER);
 
 	glAttachShader(program_id, vertex_shader);
 	glAttachShader(program_id, fragment_shader);

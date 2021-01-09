@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef SHADER_H
 #define SHADER_H
 
@@ -16,14 +14,14 @@ public:
 	unsigned int program_id;
 	Shader(const char* vertex_path, const char* fragment_path);
 
-	void use();
-	void set_bool(const std::string& name, bool value);
-	void set_int(const std::string& name, int value);
-	void set_float(const std::string& name, float value);
+	void use() const;
+	void set_bool(const std::string& name, bool value) const;
+	void set_int(const std::string& name, int value) const;
+	void set_float(const std::string& name, float value) const;
 
 private:
-	const char* vertex_shader_code_;
-	const char* fragment_shader_code_;
+	std::string vertex_shader_code_;
+	std::string fragment_shader_code_;
 
 
 	void read_shader_code(const char* vertex_path, const char* fragment_path);
