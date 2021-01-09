@@ -20,7 +20,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	auto* const window = glfwCreateWindow(800, 600, "Exercise1", nullptr, nullptr);
-	if(window == nullptr)
+	if (window == nullptr)
 	{
 		std::cout << "Failed To Create Window" << std::endl;
 		return -1;
@@ -28,7 +28,7 @@ int main()
 
 	glfwMakeContextCurrent(window);
 
-	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
@@ -49,12 +49,13 @@ int main()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(sizeof(float) * 3)); //color
 	glEnableVertexAttribArray(1);
 
-	while(!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		
+
 		our_shader.use();
+		our_shader.set_float("offset", 0.5f);
 
 		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -63,7 +64,7 @@ int main()
 		glfwPollEvents();
 	}
 
-	
-	
+
+
 	return 0;
 }
