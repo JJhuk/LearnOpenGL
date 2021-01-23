@@ -28,6 +28,7 @@ int main()
 		std::cout << "Failed to Init GLAD";
 		return -1;
 	}
+	//2332 892
 
 	unsigned int texture1,texture2;
 	glGenTextures(1, &texture1);
@@ -38,11 +39,11 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, texture1);
 
 	//텍스쳐 래핑 / 필터링 옵션 설정
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	// 텍스처 필터링
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //가장 가까운 밉맵 레벨, 선형 보간 택스처 확대는 밉맥 사용 X
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //가장 가까운 밉맵 레벨, 선형 보간 택스처 확대는 밉맥 사용 X
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	int texture_with, texture_height, nr_channels;
 	auto* data = stbi_load("Textures/image/container.jpg", &texture_with, &texture_height, &nr_channels, 0);
@@ -55,6 +56,7 @@ int main()
 	else
 	{
 		std::cout << "failed to load texture" << std::endl;
+		return -1;
 	}
 
 	stbi_image_free(data);
@@ -63,11 +65,11 @@ int main()
 
 	glBindTexture(GL_TEXTURE_2D, texture2);
 	//텍스쳐 래핑 / 필터링 옵션 설정
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	// 텍스처 필터링
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //가장 가까운 밉맵 레벨, 선형 보간 택스처 확대는 밉맥 사용 X
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //가장 가까운 밉맵 레벨, 선형 보간 택스처 확대는 밉맥 사용 X
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	stbi_set_flip_vertically_on_load(true);
 	data = stbi_load("Textures/image/awesomeface.png", &texture_with, &texture_height, &nr_channels, 0);
 
@@ -86,10 +88,10 @@ int main()
 
 	float vertices[] = {
 		// position			// color			// texture coords
-		0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	1.0f, 1.0f,	// top right
-		0.5f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,	1.0f, 0.0f,	// bottom right
-		-0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f,	0.0f, 0.0f, // bottom left
-		-0.5f, 0.5f, 0.0f,	1.0f, 1.0f,	0.0f,	0.0f, 1.0f	// top left
+		0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	0.55f, 0.55f,	// top right
+		0.5f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,	0.55f, 0.45f,	// bottom right
+		-0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f,	0.45f, 0.45f, // bottom left
+		-0.5f, 0.5f, 0.0f,	1.0f, 1.0f,	0.0f,	0.45f, 0.55f	// top left
 	};
 
 	unsigned indices[] = {
@@ -106,7 +108,6 @@ int main()
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
 
 	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -145,5 +146,4 @@ int main()
 
 		glfwSwapBuffers(window);
 	}
-
 }

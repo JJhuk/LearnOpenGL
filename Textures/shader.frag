@@ -10,5 +10,7 @@ uniform sampler2D texture2;
 
 void main()
 {
-	FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2); //3번째 인자가 0이면 앞, 1이면 뒤 그 사이면 퍼센트만큼 보간
+	//y=0.5에 대하여 대칭을 해야 함.
+	//FragColor = mix(texture(texture1, TexCoord), texture(texture2, vec2(1-TexCoord.x, TexCoord.y)), 0.2);
+	FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);
 }
