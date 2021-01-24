@@ -5,6 +5,23 @@
 #include <iostream>
 #include "../Common/Shader.h"
 #include "../Common/def.h"
+#include "../Common/common.h"
+
+float ratio = 0.0f;
+
+void set_ratio_by_key(GLFWwindow* window, Shader* our_shader)
+{
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		ratio = ratio >= 0.0f ? ratio - 0.01f : 0.0f;
+		our_shader->set_float("ratio", ratio);
+	}
+	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		ratio = ratio <= 1.0f ? ratio + 0.01f : 1.0f;
+		our_shader->set_float("ratio", ratio);
+	}
+}
 
 int main()
 {
@@ -86,12 +103,20 @@ int main()
 
 	
 
+	// float vertices[] = {
+	// 	// position			// color			// texture coords
+	// 	0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	0.55f, 0.55f,	// top right
+	// 	0.5f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,	0.55f, 0.45f,	// bottom right
+	// 	-0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f,	0.45f, 0.45f, // bottom left
+	// 	-0.5f, 0.5f, 0.0f,	1.0f, 1.0f,	0.0f,	0.45f, 0.55f	// top left
+	// };
+
 	float vertices[] = {
 		// position			// color			// texture coords
-		0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	0.55f, 0.55f,	// top right
-		0.5f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,	0.55f, 0.45f,	// bottom right
-		-0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f,	0.45f, 0.45f, // bottom left
-		-0.5f, 0.5f, 0.0f,	1.0f, 1.0f,	0.0f,	0.45f, 0.55f	// top left
+		0.5f, 0.5f, 0.0f,	1.0f, 0.0f, 0.0f,	1.0f, 1.0f,	// top right
+		0.5f, -0.5f, 0.0f,	0.0f, 1.0f, 0.0f,	1.0f, 0.0f,	// bottom right
+		-0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f,	0.0f, 0.0f, // bottom left
+		-0.5f, 0.5f, 0.0f,	1.0f, 1.0f,	0.0f,	0.0f, 1.0f	// top left
 	};
 
 	unsigned indices[] = {
@@ -114,7 +139,7 @@ int main()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	
 	
-	const Shader our_shader("Textures/shader.vert", "Textures/shader.frag");
+	Shader our_shader("Textures/shader.vert", "Textures/shader.frag");
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, reinterpret_cast<void*>(sizeof(float) * 0));
 	glEnableVertexAttribArray(0);
@@ -135,6 +160,8 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		set_ratio_by_key(window, &our_shader);
+
 		glActiveTexture(GL_TEXTURE0); // 텍스처를 바인딩 하기 전에 활성화시켜주어야 함. 0은 기본으로 설정.
 		glBindTexture(GL_TEXTURE_2D, texture1);
 		glActiveTexture(GL_TEXTURE1);
@@ -144,6 +171,7 @@ int main()
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+		glfwPollEvents();
 		glfwSwapBuffers(window);
 	}
 }
