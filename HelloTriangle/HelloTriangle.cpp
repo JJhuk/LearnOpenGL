@@ -72,6 +72,10 @@ GLFWwindow* create_window()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+#if __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
     auto* const window = glfwCreateWindow(800, 600, "Hello World!", nullptr, nullptr);
 
     if (window == nullptr)
@@ -98,31 +102,31 @@ int main()
 
 
     unsigned int vbo, vao;
-    glGenBuffers(1, &vbo); //¹öÅØ½º ¹öÆÛ °³Ã¼ »ý¼º
-    glGenVertexArrays(1, &vao); //¹öÅØ½º ¹è¿­ °³Ã¼ »ý¼º
+    glGenBuffers(1, &vbo); //ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
+    glGenVertexArrays(1, &vao); //ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½è¿­ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½
 
-    glBindVertexArray(vao); //¹öÅÃ½º ¹è¿­ °³Ã¼ ¹ÙÀÎµù
+    glBindVertexArray(vao); //ï¿½ï¿½ï¿½Ã½ï¿½ ï¿½è¿­ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½Îµï¿½
 	
-    glBindBuffer(GL_ARRAY_BUFFER, vbo); //¹öÅØ½º ÆÛ¹ö °³Ã¼ ¹ÙÀÎµù
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //¹öÅØ½º µ¥ÀÌÅÍ º¹»ç
+    glBindBuffer(GL_ARRAY_BUFFER, vbo); //ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½Û¹ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½Îµï¿½
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     const auto vertex_shader = compile_shader(vertex_shader_source, GL_VERTEX_SHADER);
     const auto fragment_shader = compile_shader(fragment_shader_source, GL_FRAGMENT_SHADER);
 
-	const auto shader_program = glCreateProgram(); //¼ÎÀÌ´õ ÇÁ·Î±×·¥ »ý¼º
+	const auto shader_program = glCreateProgram(); //ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-	//°¢ ¼ÎÀÌ´õÀÇ Ãâ·ÂÀÌ ´ÙÀ½ ¼ÎÀÌ´õÀÇ ÀÔ·ÂÀÌ µÇµµ·Ï ¿¬°áÇØ¾ß ÇÔ.
+	//ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½Çµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½.
     glAttachShader(shader_program, vertex_shader);
     glAttachShader(shader_program, fragment_shader);
     glLinkProgram(shader_program);
 
-	//¼ÎÀÌ´õ ÇÁ·Î±×·¥À» ¿Ï¼ºÇßÀ¸¹Ç·Î ¼ÎÀÌ´õ´Â »èÁ¦.
+	//ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½Ï¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
 
-	//¹öÅØ½º ¼Ó¼ºÀÇ ¹öÅØ½º µ¥ÀÌÅÍ¸¦ ÇØ¼®ÇÏ´Â ¹æ¹ý
-	//¹öÅØ½º ¼Ó¼ºÀÇ À§Ä¡¸¦ 0À¸·Î ÁöÁ¤ÇÏ°í vec3ÀÎ float ÀÔ·Â
-	//ÀÌ ÇÔ¼ö¸¦ È£ÃâÇÒ ¶§ GL_ARRAY_BUFFER¿¡ ¹ÙÀÎµù µÈ VBO¿¡ ÀÇÇØ °áÁ¤. ÀÌ¹Ì ¹ÙÀÎµù µÇ¾î ÀÖÀ¸¹Ç·Î ¹öÅØ½º ¼Ó¼º 0Àº ¹öÅØ½º µ¥ÀÌÅÍ¿Í ¿¬°á
+	//ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½Ó¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ø¼ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
+	//ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½Ó¼ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ vec3ï¿½ï¿½ float ï¿½Ô·ï¿½
+	//ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ GL_ARRAY_BUFFERï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ VBOï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½Ó¼ï¿½ 0ï¿½ï¿½ ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
 
@@ -133,12 +137,12 @@ int main()
 	{
         glUseProgram(shader_program);
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 3); //¹öÅÃ½º ¹è¿­ ½ÃÀÛ ÀÎµ¦½º, ¿ì¸®°¡ ±×¸®´Â ¹öÅÃ½ºÀÇ ¼ö
+        glDrawArrays(GL_TRIANGLES, 0, 3); //ï¿½ï¿½ï¿½Ã½ï¿½ ï¿½è¿­ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½, ï¿½ì¸®ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
 		glfwSwapBuffers(window);
         glfwPollEvents();
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f); //¼±ÅÃÇÑ »ö»óÀ¸·Î È­¸é Áö¿ì±â ¼³Á¤ÇÏÁö ¾ÊÀ¸¸é ÀÌÀü ¹öÆÛ°¡ °è¼Ó ±×·ÁÁü (»óÅÂ ÁöÁ¤ ÇÔ¼ö)
-        glClear(GL_COLOR_BUFFER_BIT); //Áö¿ï ºñÆ® ¼±Á¤ (»óÅÂ »ç¿ë ÇÔ¼ö)
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Û°ï¿½ ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½)
+        glClear(GL_COLOR_BUFFER_BIT); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½)
 	}
 
     glfwTerminate();

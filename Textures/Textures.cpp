@@ -1,5 +1,5 @@
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "../Common/stb_image.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -51,15 +51,15 @@ int main()
 	glGenTextures(1, &texture1);
 	glGenTextures(1, &texture2);
 
-	// Ã¹¹øÂ° ÅØ½ºÃÄ1
+	// Ã¹ï¿½ï¿½Â° ï¿½Ø½ï¿½ï¿½ï¿½1
 	// ==============
 	glBindTexture(GL_TEXTURE_2D, texture1);
 
-	//ÅØ½ºÃÄ ·¡ÇÎ / ÇÊÅÍ¸µ ¿É¼Ç ¼³Á¤
+	//ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ / ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½É¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	// ÅØ½ºÃ³ ÇÊÅÍ¸µ
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //°¡Àå °¡±î¿î ¹Ó¸Ê ·¹º§, ¼±Çü º¸°£ ÅÃ½ºÃ³ È®´ë´Â ¹Ó¸Æ »ç¿ë X
+	// ï¿½Ø½ï¿½Ã³ ï¿½ï¿½ï¿½Í¸ï¿½
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½Ã³ È®ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½ ï¿½ï¿½ï¿½ X
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	int texture_with, texture_height, nr_channels;
@@ -78,21 +78,21 @@ int main()
 
 	stbi_image_free(data);
 
-	// µÎ¹øÂ° ÅØ½ºÃÄ
+	// ï¿½Î¹ï¿½Â° ï¿½Ø½ï¿½ï¿½ï¿½
 
 	glBindTexture(GL_TEXTURE_2D, texture2);
-	//ÅØ½ºÃÄ ·¡ÇÎ / ÇÊÅÍ¸µ ¿É¼Ç ¼³Á¤
+	//ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ / ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½É¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// ÅØ½ºÃ³ ÇÊÅÍ¸µ
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //°¡Àå °¡±î¿î ¹Ó¸Ê ·¹º§, ¼±Çü º¸°£ ÅÃ½ºÃ³ È®´ë´Â ¹Ó¸Æ »ç¿ë X
+	// ï¿½Ø½ï¿½Ã³ ï¿½ï¿½ï¿½Í¸ï¿½
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½Ã³ È®ï¿½ï¿½ï¿½ ï¿½Ó¸ï¿½ ï¿½ï¿½ï¿½ X
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	stbi_set_flip_vertically_on_load(true);
 	data = stbi_load("Textures/image/awesomeface.png", &texture_with, &texture_height, &nr_channels, 0);
 
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_with, texture_with, 0, GL_RGBA, GL_UNSIGNED_BYTE, data); //pngÀÌ¹Ç·Î rgba
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_with, texture_with, 0, GL_RGBA, GL_UNSIGNED_BYTE, data); //pngï¿½Ì¹Ç·ï¿½ rgba
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -162,7 +162,7 @@ int main()
 
 		set_ratio_by_key(window, &our_shader);
 
-		glActiveTexture(GL_TEXTURE0); // ÅØ½ºÃ³¸¦ ¹ÙÀÎµù ÇÏ±â Àü¿¡ È°¼ºÈ­½ÃÄÑÁÖ¾î¾ß ÇÔ. 0Àº ±âº»À¸·Î ¼³Á¤.
+		glActiveTexture(GL_TEXTURE0); // ï¿½Ø½ï¿½Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½. 0ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 		glBindTexture(GL_TEXTURE_2D, texture1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
