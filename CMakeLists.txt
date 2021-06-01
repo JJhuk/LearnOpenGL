@@ -20,7 +20,7 @@ add_executable(LearnOpenGL
         HelloTriangle/Common/def.h
         HelloTriangle/Common/shader.cpp
         HelloTriangle/Common/shader.h
-        HelloTriangle/HelloTriangle.cpp
+        HelloTriangle/HelloTriangle-indexed.cpp
         )
 
 target_link_libraries(LearnOpenGL PRIVATE OpenGL::GL)
