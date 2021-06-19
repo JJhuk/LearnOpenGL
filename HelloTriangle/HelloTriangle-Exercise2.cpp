@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "../Common/def.h"
-#include "../Common/shader.h"
+#include "../Common/Shader.h"
 
 #define LEFT_TRIANGLE 0
 #define RIGHT_TRIANGLE 1
@@ -83,8 +83,8 @@ int main()
 	}
 
 	// shader
-	const auto vertex_shader = shader::compile_shader(vertex_shader_source, GL_VERTEX_SHADER);
-	const auto fragment_shader = shader::compile_shader(fragment_shader_source,GL_FRAGMENT_SHADER);
+	const auto vertex_shader = Shader::compile_shader(vertex_shader_source, GL_VERTEX_SHADER);
+	const auto fragment_shader = Shader::compile_shader(fragment_shader_source,GL_FRAGMENT_SHADER);
 
 	if(vertex_shader == NULL || fragment_shader == NULL)
 	{

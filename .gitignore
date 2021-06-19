@@ -7,3 +7,6 @@
 *.pdb
 *.user
 *.recipe
+.idea
+cmake-build-debug
+.DS_Store

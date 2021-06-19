@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "Shader.h"
 
 void Shader::read_shader_code(const char* vertex_path, const char* fragment_path)
 {

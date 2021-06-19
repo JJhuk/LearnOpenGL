@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "../Common/shader.h"
+#include "../Common/Shader.h"
 #include "../Common/def.h"
 
 
@@ -47,6 +47,9 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR_VERSION);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR_VERSION);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#if __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
 	const auto window = glfwCreateWindow(WIDTH, HEIGHT, "Exercise1",
 	                                     nullptr, nullptr);
@@ -67,8 +70,8 @@ int main()
 	}
 
 	//compile and linking shader
-	const auto vertex_shader = shader::compile_shader(vertex_shader_source, GL_VERTEX_SHADER);
-	const auto fragment_shader = shader::compile_shader(fragment_shader_source, GL_FRAGMENT_SHADER);
+	const auto vertex_shader = Shader::compile_shader(vertex_shader_source, GL_VERTEX_SHADER);
+	const auto fragment_shader = Shader::compile_shader(fragment_shader_source, GL_FRAGMENT_SHADER);
 	const auto program = glCreateProgram();
 
 	glAttachShader(program, vertex_shader);
