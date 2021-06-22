@@ -64,9 +64,9 @@ const char* yellow_fragment_shader_source =
 		FragColor = vec4(1.0f, 1.0f, 0f, 1.0f);
 	})";
 
-void frame_buffer_size_callback(GLFWwindow* window, const int width, const int height)
+void frame_buffer_size_callback(int w, int h)
 {
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, w, h);
 }
 
 int main()

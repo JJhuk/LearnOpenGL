@@ -53,7 +53,7 @@ GLuint Shader::compile_shader(const char* source, const GLuint shader_type)
 	if (!(shader_type == GL_FRAGMENT_SHADER || shader_type == GL_VERTEX_SHADER))
 	{
 		std::cout << "shader_type supported only GL_FRAGMENT_SHADER and GL_VERTEX_SHADER";
-		return NULL;
+		return 0;
 	}
 
 	const auto shader = glCreateShader(shader_type);

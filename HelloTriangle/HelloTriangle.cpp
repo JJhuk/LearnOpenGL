@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+
 const char* vertex_shader_source = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
 "void main()\n"
@@ -24,7 +25,7 @@ float vertices[] = {
         0.0f,  0.5f, 0.0f
 };
 
-void frame_buffer_size_callback(GLFWwindow* window, int w, int h)
+void frame_buffer_size_callback(int w, int h)
 {
     glViewport(0, 0, w, h);
 }
@@ -131,7 +132,7 @@ int main()
     glEnableVertexAttribArray(0);
 
 
-    glfwSetFramebufferSizeCallback(window, frame_buffer_size_callback);
+    glfwSetFramebufferSizeCallback(frame_buffer_size_callback, 0);
 
 	while(!glfwWindowShouldClose(window))
 	{

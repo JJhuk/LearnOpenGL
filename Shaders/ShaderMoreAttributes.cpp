@@ -18,10 +18,10 @@ struct vec4_f
 };
 
 float vertices[] = {
-	//À§Ä¡					// »ö»ó
-	 0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f, // ¿À¸¥ÂÊ ÇÏ´Ü
-	-0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f, // ¿ÞÂÊ ÇÏ´Ü
-	 0.0f,  0.5f, 0.0f,		0.0f, 0.0f, 1.0f  // »ó´Ü
+	//ï¿½ï¿½Ä¡					// ï¿½ï¿½ï¿½ï¿½
+	 0.5f, -0.5f, 0.0f,		1.0f, 0.0f, 0.0f, // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½
+	-0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f, // ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½
+	 0.0f,  0.5f, 0.0f,		0.0f, 0.0f, 1.0f  // ï¿½ï¿½ï¿½
 };
 
 const char* vertex_shader_source = R"(
@@ -52,9 +52,9 @@ const char* fragment_shader_source = R"(
 	}
 )";
 
-void frame_buffer_size_callback(GLFWwindow* window, const int width, const int height)
+void frame_buffer_size_callback(int w, int h)
 {
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, w, h);
 }
 
 int main()
@@ -109,12 +109,12 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof vertices, vertices, GL_STATIC_DRAW);
 
-	//À§Ä¡ Attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(0)); //´ÙÀ½ À§Ä¡ µ¥ÀÌÅÍ±îÁö stride°¡ 6 * 4 = 24
+	//ï¿½ï¿½Ä¡ Attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(0)); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½Í±ï¿½ï¿½ï¿½ strideï¿½ï¿½ 6 * 4 = 24
 	glEnableVertexAttribArray(0);
 
-	//»ö»ó Attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(3 * sizeof(float))); //»ö»óÀÇ offsetÀº À§Ä¡ µ¥ÀÌÅÍ ´ÙÀ½ÀÌ¹Ç·Î 3Ä­µÚ
+	//ï¿½ï¿½ï¿½ï¿½ Attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(3 * sizeof(float))); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ offsetï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ 3Ä­ï¿½ï¿½
 	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, NULL);

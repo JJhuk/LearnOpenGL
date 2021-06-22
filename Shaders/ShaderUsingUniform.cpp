@@ -50,9 +50,9 @@ const char* fragment_shader_source =R"(
 	}
 )";
 
-void frame_buffer_size_callback(GLFWwindow* window, const int width, const int height)
+void frame_buffer_size_callback(int w, int h)
 {
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, w, h);
 }
 
 int main()
