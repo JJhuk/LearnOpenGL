@@ -1,4 +1,4 @@
-#define STB_IMAGE_IMPLEMENTATION
+﻿#define STB_IMAGE_IMPLEMENTATION
 #include <iostream>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -9,38 +9,49 @@
 #include "../Common/def.h"
 #include "stb_image.h"
 
-int main()
+GLFWwindow* gl_init_and_create_window()
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, MAJOR_VERSION);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, MINOR_VERSION);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	const auto window = glfwCreateWindow(WIDTH, HEIGHT, "Transformation - Exercise1", nullptr, nullptr);
 
-	auto* const window = glfwCreateWindow(WIDTH, HEIGHT, "Transformations", nullptr, nullptr);
-	
-	if(!window)
+	if (window == nullptr)
 	{
-		std::cout << "Failed Create window!";
-		return -1;
+		std::cout << "Failed Create Window!";
+		return nullptr;
 	}
 
 	glfwMakeContextCurrent(window);
 
-	if(!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
 	{
 		std::cout << "Failed to Init GLAD";
-		return -1;
+		return nullptr;
 	}
 
-	const Shader our_shader("Transformations/transformation.vert", "Transformations/transformation.frag");
+	return window;
+}
 
 
+int main()
+{
+	const auto window = gl_init_and_create_window();
+
+	if (window == nullptr)
+	{
+		return -1;
+	}
+	const Shader our_shader("Transformations/transformations - Exercise1.vert",
+	                        "Transformations/transformations - Exercise1.frag");
+
+#pragma region BIND_BUFFER
 	float vertices[] = {
-		// positions          // colors           // texture coords
-		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+		// positions         // texture coords
+		0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // top right
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f // top left 
 	};
 
 	unsigned indices[] = {
@@ -48,44 +59,44 @@ int main()
 		1, 2, 3
 	};
 
-	unsigned vbo, vao, ebo;
-
+	unsigned int vbo, vao, ebo;
 	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ebo);
+
 	glBindVertexArray(vao);
 
-	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof vertices, vertices, GL_STATIC_DRAW);
 
-	glGenBuffers(1, &ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof indices, indices, GL_STATIC_DRAW);
 
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, reinterpret_cast<const void*>(sizeof(float) * 0));
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), static_cast<void*>(nullptr));
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, reinterpret_cast<const void*>(sizeof(float) * 3));
+	// texture Coordinate attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), reinterpret_cast<void*>(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, reinterpret_cast<const void*>(sizeof(float) * 6));
-	glEnableVertexAttribArray(2);
+#pragma endregion
 
-
-
+#pragma region Texture
 	unsigned texture1, texture2;
 
 	glGenTextures(1, &texture1);
-
 	glBindTexture(GL_TEXTURE_2D, texture1);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	int texture_width, texture_height, nr_channels;
+	stbi_set_flip_vertically_on_load(true);
+
 	const auto* file_path = "Textures/image/container.jpg";
 	auto* data = stbi_load(file_path, &texture_width, &texture_height, &nr_channels, 0);
-	
+
 	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_width, texture_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -110,14 +121,12 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 
-	stbi_set_flip_vertically_on_load(true);
-
 	const auto* path = "Textures/image/awesomeface.png";
-	auto* data2 = stbi_load(path, &texture_width, &texture_height, &nr_channels, 0);
-	
-	if (data2)
+	data = stbi_load(path, &texture_width, &texture_height, &nr_channels, 0);
+
+	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_width, texture_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -127,48 +136,38 @@ int main()
 		return -1;
 	}
 
-	stbi_image_free(data2);
-
+	stbi_image_free(data);
 	our_shader.use();
 	our_shader.set_int("texture1", 0);
 	our_shader.set_int("texture2", 1);
-
-	auto trans = rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-	trans = scale(trans, glm::vec3(0.5, 0.5, 0.5));
-
-	const auto transform_location = glGetUniformLocation(our_shader.program_id, "transform");
-	glUniformMatrix4fv(transform_location, 1, GL_FALSE, value_ptr(trans));
-
-
-	
+#pragma endregion
 
 	while (!glfwWindowShouldClose(window))
 	{
-		our_shader.use();
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
+		glBindTexture(GL_TEXTURE0, texture1);
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-
-		our_shader.use();
-		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
+		glBindTexture(GL_TEXTURE1, texture2);
 
 		auto transformation = glm::mat4(1.0f);
-		transformation = translate(transformation, glm::vec3(0.5f, -0.5f, 0.0f));
+		// Exercise : Change order rotate and translate
 		transformation = rotate(transformation, static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+		transformation = translate(transformation, glm::vec3(0.5f, -0.5f, 0.0f));
 
-		glUniformMatrix4fv(transform_location, 1, GL_FALSE, value_ptr(transformation));
+		our_shader.use();
+		const GLint uniform_location = glGetUniformLocation(our_shader.program_id, "transform");
+		glUniformMatrix4fv(uniform_location, 1, GL_FALSE, value_ptr(transformation));
 
-		glfwPollEvents();
+		glBindVertexArray(vbo);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
 		glfwSwapBuffers(window);
+		glfwPollEvents();
 	}
-
-	glDeleteVertexArrays(1, &vao);
+	glDeleteVertexArrays(1, &vbo);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 	glfwTerminate();
