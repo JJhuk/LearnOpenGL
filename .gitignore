@@ -9,4 +9,5 @@
 *.recipe
 .idea
 cmake-build-debug
+cmake-build-debug-visual-studio
 .DS_Store
