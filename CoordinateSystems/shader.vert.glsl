@@ -7,10 +7,15 @@ layout (location = 2) in vec2 aTexCoord;
 out vec3 ourColor;
 out vec2 TexCoord;
 
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
 
 void main()
 {
-    gl_Position = vec4(aPos, 1.0);
+    //곱셈은 오른쪽에서 왼쪽으로 읽습니다.
+    gl_Position = projection * view * vec4(aPos, 1.0f);
     ourColor = aColor;
     TexCoord = aTexCoord;
 }

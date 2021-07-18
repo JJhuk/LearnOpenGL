@@ -8,6 +8,7 @@ include_directories(Common)
 find_package(OpenGL REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
 add_executable(LearnOpenGL
         Common/def.h
@@ -22,3 +23,4 @@ add_executable(LearnOpenGL
 target_link_libraries(LearnOpenGL PRIVATE OpenGL::GL)
 target_link_libraries(LearnOpenGL PRIVATE glad::glad)
 target_link_libraries(LearnOpenGL PRIVATE glfw)
+target_link_libraries(LearnOpenGL PRIVATE glm::glm)
