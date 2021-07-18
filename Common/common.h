@@ -11,10 +11,10 @@ namespace Common {
 
     class Window {
     private:
-        void init() const;
+        static void init() ;
 
     public:
-        Window(std::string);
+        explicit Window(std::string);
         ~Window();
         GLFWwindow* windowPtr;
     };
