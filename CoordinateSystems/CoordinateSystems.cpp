@@ -119,6 +119,21 @@ void genTexture(GLuint* texture, eTextureOption option)
     loadTexture(option);
 }
 
+void ChangeFovyByInput(GLFWwindow* window, float& ratio, bool upDown)
+{
+    if(glfwGetKey(window, upDown ? GLFW_KEY_UP : GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+        ratio += upDown ? 1.0f : 0.01;
+        return;
+    }
+    else if(glfwGetKey(window, upDown ? GLFW_KEY_DOWN : GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+        ratio -= upDown ? 1.0f : 0.01;
+        return;
+    }
+    return;
+}
+
 int main()
 {
     auto window = new Common::Window("CoordinateSystems");
@@ -177,6 +192,8 @@ int main()
     ourShader.set_int("texture1", 0);
     ourShader.set_int("texture2",1);
 
+    auto degree = 45.0f;
+    auto aspect = 800.0f / 600.0f;
     while (!glfwWindowShouldClose((window->windowPtr)))
     {
 
@@ -197,7 +214,11 @@ int main()
         glm::mat4 projection = glm::mat4(1.0f);
 
         view = glm::translate(view, glm::vec3(0.0f,0.0f,-3.0f)); //오른손좌표계이므로
-        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+        // 연습 1
+        // fovy 와 aspect를 가지고 놀아보자.
+        // fovy 가 커질수록 대상이 멀어진다.
+        // aspect-ratio 가 값이 변경하면 회전한다.
+        projection = glm::perspective(glm::radians(degree), aspect, 0.1f, 100.0f);
 
         for (int i = 0; i < count; ++i) {
             glm::mat4 model = glm::mat4(1.0f);
@@ -219,6 +240,10 @@ int main()
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         glfwPollEvents();
+        ChangeFovyByInput(window->windowPtr, degree, true);
+        ChangeFovyByInput(window->windowPtr, aspect, false);
+
+        std::cout << "degree : " << degree << "aspect : " << aspect << std::endl;
         glfwSwapBuffers(window->windowPtr);
     }
 

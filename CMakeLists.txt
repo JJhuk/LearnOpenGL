@@ -23,4 +23,4 @@ add_executable(LearnOpenGL
 target_link_libraries(LearnOpenGL PRIVATE OpenGL::GL)
 target_link_libraries(LearnOpenGL PRIVATE glad::glad)
 target_link_libraries(LearnOpenGL PRIVATE glfw)
-target_link_libraries(LearnOpenGL PRIVATE glm)
+target_link_libraries(LearnOpenGL PRIVATE glm::glm)
